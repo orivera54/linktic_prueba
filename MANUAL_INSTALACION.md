@@ -135,7 +135,14 @@ npx playwright test
 
 A continuación se presentan los comandos cURL para probar los servicios directamente. Puede importar estos comandos en Postman (File -> Import -> Raw text).
 
-### 8.1. Servicio de Productos (Puerto 8081)
+### 8.1 Documentación Interactiva (Swagger UI)
+
+También puede acceder a la documentación interactiva y probar los endpoints desde el navegador:
+
+- **Servicio de Productos:** [http://localhost:8081/swagger-ui.html](http://localhost:8081/swagger-ui.html)
+- **Servicio de Inventario:** [http://localhost:8082/swagger-ui.html](http://localhost:8082/swagger-ui.html)
+
+### 8.2. Servicio de Productos (Puerto 8081)
 
 **Crear un Producto:**
 ```bash

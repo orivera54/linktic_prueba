@@ -44,7 +44,10 @@ Para realizar una compra:
 
 ## 5. Pruebas de API (Avanzado)
 
-Si desea probar los servicios directamente sin usar la interfaz gráfica (por ejemplo, para automatización o integración), puede utilizar comandos cURL.
+Si desea probar los servicios directamente sin usar la interfaz gráfica (por ejemplo, para automatización o integración), puede utilizar comandos cURL o la documentación interactiva de **Swagger**.
+
+- **Swagger Productos:** [http://localhost:8081/swagger-ui.html](http://localhost:8081/swagger-ui.html)
+- **Swagger Inventario:** [http://localhost:8082/swagger-ui.html](http://localhost:8082/swagger-ui.html)
 
 En el **Manual de Instalación (Sección 8)** encontrará la lista completa de comandos cURL para:
 - Crear, actualizar y eliminar productos (Puerto 8081).
