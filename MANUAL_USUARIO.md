@@ -40,5 +40,20 @@ Para realizar una compra:
 - Utilice la barra de búsqueda para filtrar por nombre en tiempo real.
 - Utilice el selector de estado para ver solo productos **Activos** o **Inactivos**.
 
-## 4. Soporte
+- Utilice el selector de estado para ver solo productos **Activos** o **Inactivos**.
+
+## 5. Pruebas de API (Avanzado)
+
+Si desea probar los servicios directamente sin usar la interfaz gráfica (por ejemplo, para automatización o integración), puede utilizar comandos cURL.
+
+En el **Manual de Instalación (Sección 8)** encontrará la lista completa de comandos cURL para:
+- Crear, actualizar y eliminar productos (Puerto 8081).
+- Consultar inventario y realizar compras manuales (Puerto 8082).
+
+**Ejemplo rápido (Consultar inventario):**
+```bash
+curl -X GET http://localhost:8082/inventory/{productId}
+```
+
+## 6. Soporte
 Si encuentra problemas persistentes, verifique el **Manual de Instalación** o use la función de "Sincronizar" para refrescar el estado de la aplicación.

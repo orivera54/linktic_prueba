@@ -130,3 +130,73 @@ npx playwright test
     *   Inventory Service necesita el puerto `8082`.
     *   Frontend necesita el puerto `5173`.
     Asegúrese de que estos puertos estén libres.
+
+## 8. Referencia de API (cURL para Postman)
+
+A continuación se presentan los comandos cURL para probar los servicios directamente. Puede importar estos comandos en Postman (File -> Import -> Raw text).
+
+### 8.1. Servicio de Productos (Puerto 8081)
+
+**Crear un Producto:**
+```bash
+curl -X POST http://localhost:8081/products \
+     -H "Content-Type: application/json" \
+     -d '{
+       "sku": "PROD-001",
+       "name": "Producto de Prueba",
+       "price": 25.50,
+       "status": "ACTIVE"
+     }'
+```
+
+**Listar Productos (Paginado):**
+```bash
+curl -X GET "http://localhost:8081/products?page=0&size=10&direction=desc"
+```
+
+**Obtener Producto por ID:**
+```bash
+curl -X GET http://localhost:8081/products/{id}
+```
+
+**Actualizar Producto:**
+```bash
+curl -X PUT http://localhost:8081/products/{id} \
+     -H "Content-Type: application/json" \
+     -d '{
+       "sku": "PROD-001-UPD",
+       "name": "Producto Actualizado",
+       "price": 30.00,
+       "status": "ACTIVE"
+     }'
+```
+
+**Eliminar Producto:**
+```bash
+curl -X DELETE http://localhost:8081/products/{id}
+```
+
+### 8.2. Servicio de Inventario (Puerto 8082)
+
+**Consultar Inventario por Producto:**
+```bash
+curl -X GET http://localhost:8082/inventory/{productId}
+```
+
+**Realizar una Compra (Reduce Inventario):**
+```bash
+curl -X POST http://localhost:8082/inventory/purchases \
+     -H "Content-Type: application/json" \
+     -H "Idempotency-Key: 12345" \
+     -d '{
+       "productId": "{productId}",
+       "quantity": 2
+     }'
+```
+
+**Agregar Inventario (Endpoint de Ayuda):**
+```bash
+curl -X POST http://localhost:8082/inventory/{productId} \
+     -H "Content-Type: application/json" \
+     -d "50"
+```
