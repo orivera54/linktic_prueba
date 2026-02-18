@@ -5,17 +5,23 @@ import com.linktic.prueba.products.dto.ProductResponse;
 import com.linktic.prueba.products.model.ProductStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.lang.NonNull;
 
 import java.util.UUID;
 
 public interface ProductService {
+    @NonNull
     ProductResponse createProduct(ProductRequest request);
 
-    ProductResponse getProductById(UUID id);
+    @NonNull
+    ProductResponse getProductById(@NonNull UUID id);
 
-    ProductResponse updateProduct(UUID id, ProductRequest request);
+    @NonNull
+    ProductResponse updateProduct(@NonNull UUID id, ProductRequest request);
 
-    void deleteProduct(UUID id);
+    void deleteProduct(@NonNull UUID id);
 
-    Page<ProductResponse> getAllProducts(String search, ProductStatus status, Pageable pageable);
+    @NonNull
+    Page<ProductResponse> getAllProducts(String search, ProductStatus status,
+            @NonNull Pageable pageable);
 }

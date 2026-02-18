@@ -11,9 +11,11 @@ import com.linktic.prueba.products.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -24,6 +26,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
+    @NonNull
     public ProductResponse createProduct(ProductRequest request) {
         if (productRepository.existsBySku(request.getSku())) {
             throw new ConflictException("Product with SKU " + request.getSku() + " already exists");
@@ -36,13 +39,14 @@ public class ProductServiceImpl implements ProductService {
                 .status(request.getStatus())
                 .build();
 
-        Product savedProduct = productRepository.save(product);
+        Product savedProduct = Objects.requireNonNull(productRepository.save(product));
         return mapToResponse(savedProduct);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public ProductResponse getProductById(UUID id) {
+    @NonNull
+    public ProductResponse getProductById(@NonNull UUID id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
         return mapToResponse(product);
@@ -50,7 +54,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public ProductResponse updateProduct(UUID id, ProductRequest request) {
+    @NonNull
+    public ProductResponse updateProduct(@NonNull UUID id, ProductRequest request) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
 
@@ -64,13 +69,13 @@ public class ProductServiceImpl implements ProductService {
         product.setPrice(request.getPrice());
         product.setStatus(request.getStatus());
 
-        Product updatedProduct = productRepository.save(product);
+        Product updatedProduct = Objects.requireNonNull(productRepository.save(product));
         return mapToResponse(updatedProduct);
     }
 
     @Override
     @Transactional
-    public void deleteProduct(UUID id) {
+    public void deleteProduct(@NonNull UUID id) {
         if (!productRepository.existsById(id)) {
             throw new ResourceNotFoundException("Product not found with id: " + id);
         }
@@ -79,7 +84,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<ProductResponse> getAllProducts(String search, ProductStatus status, Pageable pageable) {
+    @NonNull
+    public Page<ProductResponse> getAllProducts(String search, ProductStatus status,
+            @NonNull Pageable pageable) {
         Page<Product> products;
 
         if (search != null && !search.isEmpty()) {
@@ -95,7 +102,8 @@ public class ProductServiceImpl implements ProductService {
         return products.map(this::mapToResponse);
     }
 
-    private ProductResponse mapToResponse(Product product) {
+    @NonNull
+    private ProductResponse mapToResponse(@NonNull Product product) {
         return ProductResponse.builder()
                 .id(product.getId())
                 .sku(product.getSku())

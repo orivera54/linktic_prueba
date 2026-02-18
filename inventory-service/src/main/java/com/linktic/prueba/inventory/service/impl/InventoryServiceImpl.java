@@ -15,6 +15,11 @@ import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.springframework.lang.NonNull;
+import org.springframework.context.ApplicationEventPublisher;
+
+import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -26,12 +31,14 @@ public class InventoryServiceImpl implements InventoryService {
     private final InventoryRepository inventoryRepository;
     private final IdempotencyKeyRepository idempotencyKeyRepository;
     private final ProductsClient productsClient;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Override
     @Transactional(readOnly = true)
-    public Inventory getInventory(UUID productId) {
-        return inventoryRepository.findById(productId)
+    public Inventory getInventory(@NonNull UUID productId) {
+        Inventory inventory = inventoryRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Inventory not found for product: " + productId));
+        return inventory;
     }
 
     @Override
@@ -58,11 +65,9 @@ public class InventoryServiceImpl implements InventoryService {
             throw new ConflictException("Cannot verify product existence: " + e.getMessage());
         }
 
-        // 3. Get Inventory (or create if not valid? No, usually inventory must exist
-        // logic)
-        // Requirement says "Consultar inventario... debe validar que producto existe".
-        // Here we are purchasing.
-        Inventory inventory = inventoryRepository.findById(request.getProductId())
+        // 3. Get Inventory
+        UUID productId = Objects.requireNonNull(request.getProductId());
+        Inventory inventory = inventoryRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Inventory not initialized for product: " + request.getProductId()));
 
@@ -82,19 +87,25 @@ public class InventoryServiceImpl implements InventoryService {
 
         // 6. Save Idempotency Key
         if (idempotencyKey != null) {
-            idempotencyKeyRepository.save(IdempotencyKey.builder()
+            Objects.requireNonNull(idempotencyKeyRepository.save(Objects.requireNonNull(IdempotencyKey.builder()
                     .keyId(idempotencyKey)
                     .responseStatus(200)
-                    .build());
+                    .build())));
         }
 
         log.info("Purchase successful for product {} quantity {}", request.getProductId(), request.getQuantity());
-        // TODO: Publish event (InventoryChanged)
+
+        eventPublisher
+                .publishEvent(Objects.requireNonNull(com.linktic.prueba.inventory.event.InventoryChangedEvent.builder()
+                        .productId(productId)
+                        .newAvailableBalance(inventory.getAvailable())
+                        .timestamp(LocalDateTime.now())
+                        .build()));
     }
 
     @Override
     @Transactional
-    public Inventory addInventory(UUID productId, Integer quantity) {
+    public Inventory addInventory(@NonNull UUID productId, Integer quantity) {
         Optional<Inventory> existing = inventoryRepository.findById(productId);
         Inventory inventory;
         if (existing.isPresent()) {
@@ -108,6 +119,15 @@ public class InventoryServiceImpl implements InventoryService {
                     .version(0L)
                     .build();
         }
-        return inventoryRepository.save(inventory);
+        Inventory saved = inventoryRepository.save(inventory);
+
+        eventPublisher
+                .publishEvent(Objects.requireNonNull(com.linktic.prueba.inventory.event.InventoryChangedEvent.builder()
+                        .productId(productId)
+                        .newAvailableBalance(saved.getAvailable())
+                        .timestamp(LocalDateTime.now())
+                        .build()));
+
+        return Objects.requireNonNull(saved);
     }
 }

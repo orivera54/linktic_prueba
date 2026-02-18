@@ -30,18 +30,18 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductResponse> getProductById(@PathVariable UUID id) {
+    public ResponseEntity<ProductResponse> getProductById(@PathVariable @org.springframework.lang.NonNull UUID id) {
         return ResponseEntity.ok(productService.getProductById(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductResponse> updateProduct(@PathVariable UUID id,
+    public ResponseEntity<ProductResponse> updateProduct(@PathVariable @org.springframework.lang.NonNull UUID id,
             @Valid @RequestBody ProductRequest request) {
         return ResponseEntity.ok(productService.updateProduct(id, request));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable UUID id) {
+    public ResponseEntity<Void> deleteProduct(@PathVariable @org.springframework.lang.NonNull UUID id) {
         productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
     }

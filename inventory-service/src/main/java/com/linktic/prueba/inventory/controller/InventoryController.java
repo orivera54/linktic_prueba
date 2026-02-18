@@ -32,7 +32,8 @@ public class InventoryController {
     // Helper endpoint to add inventory (not explicitly requested but needed for
     // testing)
     @PostMapping("/{productId}")
-    public ResponseEntity<Inventory> addInventory(@PathVariable UUID productId, @RequestBody Integer quantity) {
+    public ResponseEntity<Inventory> addInventory(@PathVariable UUID productId,
+            @RequestBody Integer quantity) {
         return ResponseEntity.ok(inventoryService.addInventory(productId, quantity));
     }
 }
