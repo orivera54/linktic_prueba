@@ -32,9 +32,5 @@ Este documento detalla las decisiones técnicas clave tomadas durante el desarro
 **Decisión:** Utilizar Playwright con `page.route` para mockear las API.
 **Justificación:** Playwright es más rápido que Cypress y el mockeo de peticiones a nivel de red asegura que las pruebas de la UI sean independientes del estado real de la base de datos o de microservicios externos que podrían estar abajo durante el CI.
 
-## ADR 6: Traducción y Localización
-**Estatus:** Aceptado
-**Contexto:** La prueba técnica se entregará a un equipo en español.
-**Decisión:** Traducir toda la UI y la documentación al español.
-**Justificación:** Mejora la claridad en la presentación de la prueba y demuestra atención al detalle y profesionalismo.
+
 ```

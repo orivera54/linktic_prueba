@@ -58,5 +58,5 @@ En el **Manual de Instalación (Sección 8)** encontrará la lista completa de c
 curl -X GET http://localhost:8082/inventory/{productId}
 ```
 
-## 6. Soporte
-Si encuentra problemas persistentes, verifique el **Manual de Instalación** o use la función de "Sincronizar" para refrescar el estado de la aplicación.
+## 6. Autor
+Oscar Javier Rivera
